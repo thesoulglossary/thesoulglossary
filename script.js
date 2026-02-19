@@ -2,7 +2,6 @@ const BASE_PATH = window.location.pathname.split("/")[1]
   ? "/" + window.location.pathname.split("/")[1]
   : "";
 
-// UK date formatting
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB", {
@@ -12,79 +11,57 @@ function formatDate(dateString) {
   });
 }
 
-const pageWrapper = document.getElementById("page-wrapper");
+let ALL_POSTS = [];
+let refreshInterval = 60;
+let countdown = refreshInterval;
 
-// Fade animation
-function fadeAndNavigate(url) {
-  if (!pageWrapper) {
-    window.location.href = url;
-    return;
+function updateCountdown() {
+  const el = document.getElementById("countdown");
+  if (!el) return;
+
+  el.textContent = countdown;
+  countdown--;
+
+  if (countdown < 0) {
+    countdown = refreshInterval;
+    loadPosts();
   }
-
-  pageWrapper.style.opacity = "0";
-  pageWrapper.style.transform = "translateY(10px)";
-  pageWrapper.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-
-  setTimeout(() => {
-    window.location.href = url;
-  }, 300);
 }
 
-window.addEventListener("load", () => {
-  if (pageWrapper) {
-    pageWrapper.style.opacity = "0";
-    pageWrapper.style.transform = "translateY(10px)";
-    pageWrapper.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+setInterval(updateCountdown, 1000);
 
-    requestAnimationFrame(() => {
-      pageWrapper.style.opacity = "1";
-      pageWrapper.style.transform = "translateY(0)";
-    });
-  }
-});
+function updateRefreshTime() {
+  const el = document.getElementById("last-refresh");
+  if (!el) return;
 
-// Hamburger
-const hamburger = document.createElement("div");
-hamburger.className = "hamburger";
-hamburger.innerHTML = `<span></span><span></span><span></span>`;
-document.body.appendChild(hamburger);
+  const now = new Date();
+  el.textContent = now.toLocaleTimeString("en-GB");
+}
 
-const sidebar = document.querySelector(".sidebar");
+function loadPosts() {
 
-hamburger.addEventListener("click", () => {
-  sidebar.classList.toggle("active");
-});
-
-document.addEventListener("click", e => {
-  if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-    sidebar.classList.remove("active");
-  }
-});
-
-// Load posts
-let ALL_POSTS = [];
-
-fetch(BASE_PATH + "/posts.json?ts=" + Date.now(), {
-  cache: "no-store"
-})
+  fetch(BASE_PATH + "/posts.json?ts=" + Date.now(), {
+    cache: "no-store"
+  })
   .then(res => res.json())
   .then(posts => {
 
-    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    posts.sort((a,b)=> new Date(b.date)-new Date(a.date));
     ALL_POSTS = posts;
 
     renderHome();
     renderPost();
 
-  })
-  .catch(err => console.error("Failed loading posts.json", err));
+    const counter = document.getElementById("post-count");
+    if (counter) counter.textContent = posts.length;
 
-// =========================
-// HOMEPAGE
-// =========================
+    updateRefreshTime();
+  });
+}
+
 function renderHome() {
-  const path = window.location.pathname;
 
+  const path = window.location.pathname;
   if (!(path.endsWith("index.html") || path === BASE_PATH + "/")) return;
 
   const container = document.getElementById("posts");
@@ -96,29 +73,23 @@ function renderHome() {
 
     const article = document.createElement("article");
 
-    const excerpt = post.content
-      .replace(/#/g, "")
-      .substring(0, 300);
+    const excerpt = post.content.replace(/#/g,"").substring(0,100);
 
     article.innerHTML = `
       <h2>${post.title}</h2>
       <p class="date">${formatDate(post.date)}</p>
-      <p class="excerpt">${excerpt}</p>
+      <p class="excerpt">${excerpt}...</p>
+      <span class="read-more">Read more</span>
     `;
 
-    article.style.cursor = "pointer";
-
     article.addEventListener("click", () => {
-      fadeAndNavigate(`${BASE_PATH}/posts.html#${post.id}`);
+      window.location.href = `${BASE_PATH}/posts.html#${post.id}`;
     });
 
     container.appendChild(article);
   });
 }
 
-// =========================
-// POST PAGE
-// =========================
 function renderPost() {
 
   if (!window.location.pathname.includes("posts.html")) return;
@@ -131,11 +102,7 @@ function renderPost() {
 
   const index = ALL_POSTS.findIndex(p => p.id === slug);
   const post = ALL_POSTS[index];
-
-  if (!post) {
-    container.innerHTML = "<p>Post not found.</p>";
-    return;
-  }
+  if (!post) return;
 
   const prevPost = ALL_POSTS[index + 1] || null;
   const nextPost = ALL_POSTS[index - 1] || null;
@@ -143,10 +110,10 @@ function renderPost() {
   container.innerHTML = `
     <div class="entry">
       <div class="post-nav">
-        <button id="back-btn">Back</button>
+        <button onclick="window.location.href='${BASE_PATH}/index.html'">Back</button>
         <div>
-          ${prevPost ? `<button id="prev-btn">Previous</button>` : ""}
-          ${nextPost ? `<button id="next-btn">Next</button>` : ""}
+          ${prevPost ? `<button onclick="window.location.hash='${prevPost.id}'">Previous</button>` : ""}
+          ${nextPost ? `<button onclick="window.location.hash='${nextPost.id}'">Next</button>` : ""}
         </div>
       </div>
 
@@ -155,23 +122,8 @@ function renderPost() {
       <div class="entry-definition">${marked.parse(post.content)}</div>
     </div>
   `;
-
-  document.getElementById("back-btn").addEventListener("click", () => {
-    fadeAndNavigate(BASE_PATH + "/index.html");
-  });
-
-  if (prevPost) {
-    document.getElementById("prev-btn").addEventListener("click", () => {
-      window.location.hash = prevPost.id;
-    });
-  }
-
-  if (nextPost) {
-    document.getElementById("next-btn").addEventListener("click", () => {
-      window.location.hash = nextPost.id;
-    });
-  }
 }
 
-// IMPORTANT: listen for hash change
 window.addEventListener("hashchange", renderPost);
+
+loadPosts();

@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
-        <title>My Blog</title>
+
+        <title>The Soul Glossary</title>
+
+        <link rel="stylesheet" href="style.css">
+
     </head>
 
     <body>
@@ -14,27 +20,44 @@
         <div class="layout">
 
             <aside class="sidebar">
-                <h2><a href="index.html">My Blog</a></h2>
-                <p>Writing without permission.</p>
+                <h2>The Soul Glossary</h2>
+
+                <div class="about">
+                    <p>
+                        A living dictionary of thoughts, fragments, questions and quiet revelations.
+                    </p>
+                    <p>
+                        I write the words I wish I had when I needed them.
+                    </p>
+                </div>
+
+                <div class="stats">
+                    <p>Total Entries: <span id="post-count">0</span></p>
+                    <p>Last Refreshed: <span id="last-refresh">—</span></p>
+                    <p>Refreshing in <span id="countdown">60</span>s</p>
+                </div>
+
+                <div class="social">
+                    <a href="#" target="_blank">Facebook</a>
+                    <a href="#" target="_blank">Instagram</a>
+                    <a href="#" target="_blank">Telegram</a>
+                    <a href="#" target="_blank">WhatsApp</a>
+                    <a href="#" target="_blank">Mastodon</a>
+                    <a href="#" target="_blank">Threads</a>
+                </div>
             </aside>
 
-            <main id="posts" class="content"></main>
+            <main class="content" id="page-wrapper">
+                <div id="posts"></div>
+
+                <footer class="footer">
+                    <p>© 2026 The Soul Glossary. A quiet archive of becoming.</p>
+                </footer>
+            </main>
 
         </div>
 
-        <script>
-            const script = document.createElement("script");
-            script.src = "script.js?ts=" + Date.now();
-            document.body.appendChild(script);
-        </script>
-
-        <script>
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "style.css?ts=" + Date.now();
-            document.head.appendChild(link);
-        </script>
-
+        <script src="script.js"></script>
     </body>
 
 </html>
