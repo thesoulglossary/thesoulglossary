@@ -9,7 +9,7 @@ fetch("posts.json")
       article.innerHTML = `
         <h2>${post.title}</h2>
         <p><em>${post.date}</em></p>
-        <p>${post.content}</p>
+        <p>${post.content.replace(/\n/g, "<br>")}</p>
       `;
 
       container.appendChild(article);

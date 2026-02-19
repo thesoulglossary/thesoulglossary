@@ -2,7 +2,7 @@
     {
         "title": "My First JSON Post",
         "date": "19 February 2026",
-        "content": "This is my first post being loaded from JSON. It feels cleaner already."
+        "content": "First paragraph.\n\nSecond paragraph."
     },
     {
         "title": "Why I Built This Blog",
