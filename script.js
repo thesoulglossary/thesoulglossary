@@ -30,7 +30,7 @@ fetch(BASE_PATH + "/posts.json")
 
         article.innerHTML = `
           <h2>
-            <a href="${BASE_PATH}/posts/${post.id}/">
+            <a href="${BASE_PATH}/posts.html#${post.id}">
               ${post.title}
             </a>
           </h2>
@@ -43,25 +43,26 @@ fetch(BASE_PATH + "/posts.json")
     }
 
     // POST PAGE
-    if (path.includes("/posts/")) {
+    if (window.location.hash) {
 
-      const slug = path.split("/posts/")[1].replaceAll("/", "");
-      const post = posts.find(p => p.id === slug);
+  const slug = window.location.hash.substring(1);
+  const post = posts.find(p => p.id === slug);
 
-      const container = document.getElementById("post-content");
-      if (!container) return;
+  const container = document.getElementById("post-content");
+  if (!container) return;
 
-      if (!post) {
-        container.innerHTML = "<p>Post not found.</p>";
-        return;
-      }
+  if (!post) {
+    container.innerHTML = "<p>Post not found.</p>";
+    return;
+  }
 
-      container.innerHTML = `
-        <h1>${post.title}</h1>
-        <p class="date">${formatDate(post.date)}</p>
-        <div class="markdown">
-          ${marked.parse(post.content)}
-        </div>
-      `;
-    }
+  container.innerHTML = `
+    <h1>${post.title}</h1>
+    <p class="date">${formatDate(post.date)}</p>
+    <div class="markdown">
+      ${marked.parse(post.content)}
+    </div>
+  `;
+}
+
   });
