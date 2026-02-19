@@ -1,0 +1,12 @@
+[
+    {
+        "title": "My First JSON Post",
+        "date": "19 February 2026",
+        "content": "This is my first post being loaded from JSON. It feels cleaner already."
+    },
+    {
+        "title": "Why I Built This Blog",
+        "date": "18 February 2026",
+        "content": "Because I wanted control. No themes. No limits. Just pure HTML, CSS and JS."
+    }
+]
