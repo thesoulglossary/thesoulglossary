@@ -58,24 +58,6 @@ body::before {
   max-width: 220px;
 }
 
-/* Alphabet navigation */
-.alphabet {
-  margin-top: 40px;
-  font-size: 14px;
-  letter-spacing: 4px;
-}
-
-.alphabet span {
-  margin-right: 10px;
-  cursor: pointer;
-  opacity: 0.4;
-  transition: opacity 0.2s ease;
-}
-
-.alphabet span:hover {
-  opacity: 1;
-}
-
 /* Content */
 .content {
   padding: 100px 10%;

@@ -29,34 +29,10 @@ fetch(BASE_PATH + "/posts.json")
       const container = document.getElementById("posts");
       if (!container) return;
 
-      // ---------------- Alphabet Navigation ----------------
-      const alphabetContainer = document.getElementById("alphabet-nav");
-      if (alphabetContainer) {
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        alphabet.forEach(letter => {
-          const span = document.createElement("span");
-          span.textContent = letter;
-
-          span.addEventListener("click", () => {
-            const target = document.querySelector(
-              `[data-letter="${letter}"]`
-            );
-            if (target) {
-              target.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-          });
-
-          alphabetContainer.appendChild(span);
-        });
-      }
-
       // ---------------- Render Posts ----------------
       posts.forEach(post => {
 
         const article = document.createElement("article");
-
-        // For alphabet navigation
-        article.setAttribute("data-letter", post.title.trim()[0].toUpperCase());
 
         // Excerpt: preserve line breaks
         const excerpt = post.content
