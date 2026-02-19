@@ -7,7 +7,7 @@ function formatDate(dateString) {
   });
 }
 
-fetch("/posts.json")
+fetch("posts.json")
   .then(res => res.json())
   .then(posts => {
 
